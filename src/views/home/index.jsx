@@ -4,13 +4,20 @@ import { shallowEqual, useDispatch, useSelector } from 'react-redux'
 import { fetchHomeDataAction } from '@/store/modules/home'
 import HomeBanner from './c-cpns/home-banner'
 import { HomeWrapper } from './style'
-import SectionHeader from '@/components/section-header'
-import SectionRooms from '@/components/section-rooms'
+import HomeSectionV1 from './c-cpns/home-section-v1'
+import HomeSectionV2 from './c-cpns/home-section-v2'
+import HomeLongfor from './c-cpns/home-longfor'
+import HomeSectionV3 from './c-cpns/home-section-v3'
 
 const Home = memo(() => {
   /** 从redux中获取数据 */
-  const { goodPriceInfo } = useSelector((state) => ({
-    goodPriceInfo: state.home.goodPriceInfo
+  const { goodPriceInfo, highScoreInfo, discountInfo, recommendInfo, longforInfo, plusInfo } = useSelector((state) => ({
+    goodPriceInfo: state.home.goodPriceInfo,
+    highScoreInfo: state.home.highScoreInfo,
+    discountInfo: state.home.discountInfo,
+    recommendInfo: state.home.recommendInfo,
+    longforInfo: state.home.longforInfo,
+    plusInfo: state.home.plusInfo
   }), shallowEqual)
 
   /** 派发异步的事件: 发送网络请求 */
@@ -23,10 +30,14 @@ const Home = memo(() => {
     <HomeWrapper>
       <HomeBanner/>
       <div className='content'>
-        <div className='good-price'>
-          <SectionHeader title={goodPriceInfo.title}/>
-          <SectionRooms roomList={goodPriceInfo.list}/>
-        </div>
+        { Object.keys(discountInfo).length && <HomeSectionV2 infoData={discountInfo} />}
+        { Object.keys(recommendInfo).length && <HomeSectionV2 infoData={recommendInfo} /> }
+
+        { Object.keys(longforInfo).length && <HomeLongfor infoData={longforInfo} /> }
+
+        <HomeSectionV1 infoData={goodPriceInfo} />
+        <HomeSectionV1 infoData={highScoreInfo} />
+        { Object.keys(plusInfo).length && <HomeSectionV3 infoData={plusInfo} /> }
       </div>
     </HomeWrapper>
   )
